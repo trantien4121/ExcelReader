@@ -57,8 +57,7 @@ public class App
         List<AdaptiveWordDTO> adaptiveWorDTOs = wordLists.stream()
                 .flatMap(wordList -> definitions.stream()
                         .filter(d -> d.getWordId().equals(wordList.getWordId()))
-                        .map(definition -> {
-                        return AdaptiveWordDTO.builder()
+                        .map(definition -> AdaptiveWordDTO.builder()
                             .wordId(wordList.getWordId())
                             .word(wordList.getWord())
                             .priority(wordList.getPriority())
@@ -67,8 +66,7 @@ public class App
                             .prefix(definition.getPrefix())
                             .rootOrBase(definition.getRootOrBase())
                             .suffix(definition.getSuffix())
-                            .build();
-                }))
+                            .build()))
                 .collect(Collectors.toList());
 
         System.out.println(new ObjectMapper().writeValueAsString(adaptiveWorDTOs));
