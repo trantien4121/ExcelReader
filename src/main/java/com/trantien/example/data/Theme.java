@@ -6,22 +6,18 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class AdaptiveWord {
+@AllArgsConstructor
+public class Theme {
     @ExcelProperty(index = 0)
-    private String wordId;
+    private String head;
 
     @ExcelProperty(index = 1)
-    private String word;
+    private String bodyText;
 
     @ExcelProperty(index = 2)
-    private int priority;
+    private String wordList;
 
     @ExcelProperty(index = 3)
-    private String pathway;
-
-    @ExcelProperty(index = 4)
-    private String wordBk;
-
+    private String themeCode;
 }

@@ -8,16 +8,23 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdaptiveTheme {
+public class Definition {
     @ExcelProperty(index = 0)
-    private String head;
+    private String wordId;
 
     @ExcelProperty(index = 1)
-    private String bodyText;
+    private String word;
 
     @ExcelProperty(index = 2)
-    private String wordList;
+    private String inflectForm;
 
     @ExcelProperty(index = 3)
-    private String themeCode;
+    private String prefix;
+
+    @ExcelProperty(index = 4)
+    private String rootOrBase;
+
+    @ExcelProperty(index = 5)
+    private String suffix;
 }
+

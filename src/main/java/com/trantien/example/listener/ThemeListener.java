@@ -2,7 +2,7 @@ package com.trantien.example.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.trantien.example.data.AdaptiveTheme;
+import com.trantien.example.data.Theme;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,12 +14,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdaptiveThemeListener extends AnalysisEventListener<AdaptiveTheme> {
-    private List<AdaptiveTheme> adaptiveThemes;
+public class ThemeListener extends AnalysisEventListener<Theme> {
+    private List<Theme> themes;
 
     @Override
-    public void invoke(AdaptiveTheme adaptiveTheme, AnalysisContext analysisContext) {
-        adaptiveThemes.add(adaptiveTheme);
+    public void invoke(Theme adaptiveTheme, AnalysisContext analysisContext) {
+        themes.add(adaptiveTheme);
     }
 
     @Override

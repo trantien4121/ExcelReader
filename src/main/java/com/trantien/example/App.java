@@ -3,13 +3,17 @@ package com.trantien.example;
 import com.alibaba.excel.EasyExcel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trantien.example.data.AdaptiveTheme;
-import com.trantien.example.data.AdaptiveWord;
-import com.trantien.example.listener.AdaptiveThemeListener;
-import com.trantien.example.listener.AdaptiveWordListener;
+import com.trantien.example.data.Definition;
+import com.trantien.example.data.Theme;
+import com.trantien.example.data.WordList;
+import com.trantien.example.dto.AdaptiveWordDTO;
+import com.trantien.example.listener.DefinitionListener;
+import com.trantien.example.listener.ThemeListener;
+import com.trantien.example.listener.WordListListener;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
+import java.util.stream.Collectors;
 
 public class App
 {
@@ -25,21 +29,48 @@ public class App
 
         String excelFilePath = "C:\\Users\\VWA_U11_SP.xlsx";
 
-        List<AdaptiveWord> adaptiveWords = new ArrayList<>();
-        List<AdaptiveTheme> adaptiveThemes = new ArrayList<>();
+        List<WordList> wordLists = new ArrayList<>();
+        List<Theme> themes = new ArrayList<>();
+        List<Definition> definitions = new ArrayList<>();
 
-        EasyExcel.read(excelFilePath, AdaptiveWord.class, new AdaptiveWordListener(adaptiveWords)).sheet("wordlist").doRead();
-        EasyExcel.read(excelFilePath, AdaptiveTheme.class, new AdaptiveThemeListener(adaptiveThemes)).sheet("Theme How big").doRead();
+        EasyExcel.read(excelFilePath, WordList.class, new WordListListener(wordLists)).sheet("wordlist").doRead();
+        EasyExcel.read(excelFilePath, Theme.class, new ThemeListener(themes)).sheet("Theme How big").doRead();
+        EasyExcel.read(excelFilePath, Definition.class, new DefinitionListener(definitions)).sheet("Definitions").doRead();
 
-        for (AdaptiveWord adaptiveWord : adaptiveWords) {
+        //Get List of wordId from wordList
+        for (WordList adaptiveWord : wordLists) {
             System.out.println(adaptiveWord.getWordId());
         }
 
-        String adaptiveWordJson = new ObjectMapper().writeValueAsString(adaptiveWords);
-        System.out.println(adaptiveWordJson);
 
-        String adaptiveThemeJson = new ObjectMapper().writeValueAsString(adaptiveThemes);
-        System.out.println(adaptiveThemeJson);
+        //Read data from file and write values
+        String wordListJson = new ObjectMapper().writeValueAsString(wordLists);
+        System.out.println(wordListJson);
 
+        String themeJson = new ObjectMapper().writeValueAsString(themes);
+        System.out.println(themeJson);
+
+        String definitionJson = new ObjectMapper().writeValueAsString(definitions);
+        System.out.println(definitionJson);
+
+        //Filter value from file and map to DTO
+        List<AdaptiveWordDTO> adaptiveWorDTOs = wordLists.stream()
+                .flatMap(wordList -> definitions.stream()
+                        .filter(d -> d.getWordId().equals(wordList.getWordId()))
+                        .map(definition -> {
+                        return AdaptiveWordDTO.builder()
+                            .wordId(wordList.getWordId())
+                            .word(wordList.getWord())
+                            .priority(wordList.getPriority())
+                            .pathway(wordList.getPathway())
+                            .wordBk(wordList.getWordBk())
+                            .prefix(definition.getPrefix())
+                            .rootOrBase(definition.getRootOrBase())
+                            .suffix(definition.getSuffix())
+                            .build();
+                }))
+                .collect(Collectors.toList());
+
+        System.out.println(new ObjectMapper().writeValueAsString(adaptiveWorDTOs));
     }
 }
